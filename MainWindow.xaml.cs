@@ -84,14 +84,15 @@ namespace WpfDockProject
             Grid content = originalPanel.Child as Grid;
             originalPanel.Child = null;
 
+            string displayName = GetDisplayName(controlName);
             FloatingWindow floatingWindow = new FloatingWindow
             {
-                Title = controlName,
+                Title = displayName,
                 Width = GetPanelWidth(controlName),
                 Height = GetPanelHeight(controlName),
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = this,
-                PanelName = controlName,
+                PanelName = displayName,
                 ParentMainWindow = this
             };
 
@@ -113,6 +114,18 @@ namespace WpfDockProject
         private double GetPanelHeight(string controlName)
         {
             return controlName == "Solution" || controlName == "Output" ? 200 : 300;
+        }
+
+        private string GetDisplayName(string controlName)
+        {
+            return controlName switch
+            {
+                "Toolbox" => "Toolbox",
+                "Properties" => "Properties",
+                "Solution" => "Solution Explorer",
+                "Output" => "Output",
+                _ => controlName
+            };
         }
 
         private void DockControl(string controlName)

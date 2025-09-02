@@ -18,10 +18,9 @@ namespace WpfDockProject
         public void SetContent(FrameworkElement content)
         {
             ContentBorder.Child = content;
-            // Update title to show panel name
+            // Update title to show panel name (only set TitleText since Title is already set)
             if (!string.IsNullOrEmpty(PanelName))
             {
-                this.Title = $"{PanelName} - Floating";
                 TitleText.Text = PanelName;
             }
         }
