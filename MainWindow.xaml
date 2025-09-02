@@ -1,8 +1,7 @@
 <Window x:Class="WpfDockProject.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:dock="https://github.com/Dirkster99/AvalonDock"
-        Title="WPF AvalonDock Example" Height="600" Width="800">
+        Title="WPF DockPanel Example" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,102 +22,125 @@
             </MenuItem>
         </Menu>
         
-        <!-- AvalonDock Manager -->
-        <dock:DockingManager Grid.Row="1" Name="dockingManager">
+        <!-- DockPanel Layout -->
+        <DockPanel Grid.Row="1" Name="MainDockPanel">
             
-            <!-- Left Anchorable Pane -->
-            <dock:LayoutRoot>
-                <dock:LayoutPanel Orientation="Horizontal">
-                    
-                    <!-- Left Side -->
-                    <dock:LayoutAnchorablePane DockWidth="200">
-                        <dock:LayoutAnchorable ContentId="toolbox" Title="Toolbox" CanHide="True" CanClose="False">
-                            <Grid Background="LightBlue">
-                                <ListBox Margin="5">
-                                    <ListBoxItem>Button</ListBoxItem>
-                                    <ListBoxItem>TextBox</ListBoxItem>
-                                    <ListBoxItem>Label</ListBoxItem>
-                                    <ListBoxItem>ComboBox</ListBoxItem>
-                                    <ListBoxItem>CheckBox</ListBoxItem>
-                                </ListBox>
-                            </Grid>
-                        </dock:LayoutAnchorable>
-                    </dock:LayoutAnchorablePane>
-                    
-                    <!-- Center and Right -->
-                    <dock:LayoutPanel Orientation="Vertical">
-                        
-                        <!-- Top Row -->
-                        <dock:LayoutPanel Orientation="Horizontal">
-                            
-                            <!-- Center Document Area -->
-                            <dock:LayoutDocumentPane>
-                                <dock:LayoutDocument ContentId="main" Title="Main Document" CanClose="False">
-                                    <Grid Background="White">
-                                        <TextBlock Text="AvalonDock Main Content Area" 
-                                                 HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                 FontSize="24" FontWeight="Bold" Foreground="Gray"/>
-                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="20">
-                                            <TextBlock Text="AvalonDock 기능:" FontWeight="Bold" Margin="0,0,0,10"/>
-                                            <TextBlock Text="• 패널을 드래그해서 위치를 변경할 수 있습니다" Margin="0,2"/>
-                                            <TextBlock Text="• 패널을 다른 패널과 탭으로 결합할 수 있습니다" Margin="0,2"/>
-                                            <TextBlock Text="• 패널을 별도 창으로 분리할 수 있습니다" Margin="0,2"/>
-                                            <TextBlock Text="• 자동으로 도킹 위치를 표시해줍니다" Margin="0,2" Foreground="Red" FontWeight="Bold"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </dock:LayoutDocument>
-                            </dock:LayoutDocumentPane>
-                            
-                            <!-- Right Side -->
-                            <dock:LayoutAnchorablePane DockWidth="200">
-                                <dock:LayoutAnchorable ContentId="properties" Title="Properties" CanHide="True" CanClose="False">
-                                    <Grid Background="LightGreen">
-                                        <StackPanel Margin="5">
-                                            <TextBlock Text="Name:" FontWeight="Bold"/>
-                                            <TextBox Text="Control1" Margin="0,2,0,5"/>
-                                            <TextBlock Text="Width:" FontWeight="Bold"/>
-                                            <TextBox Text="200" Margin="0,2,0,5"/>
-                                            <TextBlock Text="Height:" FontWeight="Bold"/>
-                                            <TextBox Text="100" Margin="0,2,0,5"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </dock:LayoutAnchorable>
-                            </dock:LayoutAnchorablePane>
-                            
-                        </dock:LayoutPanel>
-                        
-                        <!-- Bottom Row -->
-                        <dock:LayoutAnchorablePane DockHeight="150">
-                            <dock:LayoutAnchorable ContentId="solution" Title="Solution Explorer" CanHide="True" CanClose="False">
-                                <Grid Background="LightYellow">
-                                    <TreeView Margin="5">
-                                        <TreeViewItem Header="WpfDockProject" IsExpanded="True">
-                                            <TreeViewItem Header="Properties"/>
-                                            <TreeViewItem Header="References"/>
-                                            <TreeViewItem Header="MainWindow.xaml"/>
-                                            <TreeViewItem Header="App.xaml"/>
-                                        </TreeViewItem>
-                                    </TreeView>
-                                </Grid>
-                            </dock:LayoutAnchorable>
-                            
-                            <dock:LayoutAnchorable ContentId="output" Title="Output" CanHide="True" CanClose="False">
-                                <Grid Background="LightCoral">
-                                    <TextBox Margin="5" IsReadOnly="True" Background="Black" Foreground="White">
+            <!-- Top Panel - Solution Explorer -->
+            <Border Name="SolutionPanel" DockPanel.Dock="Top" Height="150" Background="LightYellow" 
+                    BorderBrush="Gray" BorderThickness="1" Margin="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="Orange" Padding="5">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Solution Explorer" Foreground="White" FontWeight="Bold"/>
+                            <Button Name="UndockSolutionBtn" Content="📌" Width="20" Height="20" 
+                                   Margin="5,0,0,0" Click="UndockControl_Click" Tag="Solution"/>
+                        </StackPanel>
+                    </Border>
+                    <TreeView Grid.Row="1" Margin="5">
+                        <TreeViewItem Header="WpfDockProject" IsExpanded="True">
+                            <TreeViewItem Header="Properties"/>
+                            <TreeViewItem Header="References"/>
+                            <TreeViewItem Header="MainWindow.xaml"/>
+                            <TreeViewItem Header="App.xaml"/>
+                        </TreeViewItem>
+                    </TreeView>
+                </Grid>
+            </Border>
+            
+            <!-- Bottom Panel - Output -->
+            <Border Name="OutputPanel" DockPanel.Dock="Bottom" Height="100" Background="LightCoral" 
+                    BorderBrush="Gray" BorderThickness="1" Margin="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="DarkRed" Padding="5">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Output" Foreground="White" FontWeight="Bold"/>
+                            <Button Name="UndockOutputBtn" Content="📌" Width="20" Height="20" 
+                                   Margin="5,0,0,0" Click="UndockControl_Click" Tag="Output"/>
+                        </StackPanel>
+                    </Border>
+                    <TextBox Grid.Row="1" Margin="5" IsReadOnly="True" Background="Black" Foreground="White">
 Build started...
 Build succeeded.
 Ready.
-                                    </TextBox>
-                                </Grid>
-                            </dock:LayoutAnchorable>
-                        </dock:LayoutAnchorablePane>
-                        
-                    </dock:LayoutPanel>
-                    
-                </dock:LayoutPanel>
-            </dock:LayoutRoot>
+                    </TextBox>
+                </Grid>
+            </Border>
             
-        </dock:DockingManager>
+            <!-- Left Panel - Toolbox -->
+            <Border Name="ToolboxPanel" DockPanel.Dock="Left" Width="200" Background="LightBlue" 
+                    BorderBrush="Gray" BorderThickness="1" Margin="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="DarkBlue" Padding="5">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Toolbox" Foreground="White" FontWeight="Bold"/>
+                            <Button Name="UndockToolboxBtn" Content="📌" Width="20" Height="20" 
+                                   Margin="5,0,0,0" Click="UndockControl_Click" Tag="Toolbox"/>
+                        </StackPanel>
+                    </Border>
+                    <ListBox Grid.Row="1" Margin="5">
+                        <ListBoxItem>Button</ListBoxItem>
+                        <ListBoxItem>TextBox</ListBoxItem>
+                        <ListBoxItem>Label</ListBoxItem>
+                        <ListBoxItem>ComboBox</ListBoxItem>
+                        <ListBoxItem>CheckBox</ListBoxItem>
+                    </ListBox>
+                </Grid>
+            </Border>
+            
+            <!-- Right Panel - Properties -->
+            <Border Name="PropertiesPanel" DockPanel.Dock="Right" Width="200" Background="LightGreen" 
+                    BorderBrush="Gray" BorderThickness="1" Margin="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="DarkGreen" Padding="5">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Properties" Foreground="White" FontWeight="Bold"/>
+                            <Button Name="UndockPropertiesBtn" Content="📌" Width="20" Height="20" 
+                                   Margin="5,0,0,0" Click="UndockControl_Click" Tag="Properties"/>
+                        </StackPanel>
+                    </Border>
+                    <StackPanel Grid.Row="1" Margin="5">
+                        <TextBlock Text="Name:" FontWeight="Bold"/>
+                        <TextBox Text="Control1" Margin="0,2,0,5"/>
+                        <TextBlock Text="Width:" FontWeight="Bold"/>
+                        <TextBox Text="200" Margin="0,2,0,5"/>
+                        <TextBlock Text="Height:" FontWeight="Bold"/>
+                        <TextBox Text="100" Margin="0,2,0,5"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            
+            <!-- Center Content Area (fills remaining space) -->
+            <Border Background="White" BorderBrush="Gray" BorderThickness="1" Margin="2">
+                <Grid>
+                    <TextBlock Text="DockPanel Main Content Area" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                              FontSize="24" FontWeight="Bold" Foreground="Gray"/>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="20">
+                        <TextBlock Text="DockPanel 기능:" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <TextBlock Text="• Top/Bottom/Left/Right로 패널이 고정 배치됩니다" Margin="0,2"/>
+                        <TextBlock Text="• 메뉴에서 패널을 체크/해제하여 표시/숨김 할 수 있습니다" Margin="0,2"/>
+                        <TextBlock Text="• 각 패널의 📌 버튼으로 별도 창으로 분리 가능합니다" Margin="0,2"/>
+                        <TextBlock Text="• 중앙 영역이 남은 공간을 자동으로 채웁니다" Margin="0,2" Foreground="Red" FontWeight="Bold"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            
+        </DockPanel>
         
     </Grid>
 </Window>
